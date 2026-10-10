@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Fraunces", Georgia, serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --color-cream: #FBF6EE;
+  --color-cream-soft: #F5EFE4;
+  --color-cream-muted: #EADFCF;
+  --color-terracotta: #C8553D;
+  --color-terracotta-hover: #B54832;
+  --color-terracotta-muted: rgba(200, 85, 61, 0.15);
+  --color-deepgreen: #2F5D50;
+  --color-deepgreen-light: #3D7364;
+  --color-forest: #142823;
+  --color-forest-dark: #0F1F1B;
+  --color-forest-surface: #18332C;
+  --color-forest-border: #24463D;
+  --color-mustard: #E0A526;
+  --color-mustard-hover: #CCA51E;
+  --color-charcoal: #2B2B2B;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    color: #FBF6EE;
+    background-color: #0F1F1B;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  ::selection {
+    background-color: #C8553D;
+    color: #FBF6EE;
+  }
+}
+

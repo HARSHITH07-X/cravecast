@@ -1,0 +1,160 @@
+{
+  "entities": {
+    "Restaurant": {
+      "title": "Restaurant",
+      "description": "Restaurant profile, owner metadata and operational configurations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "ownerEmail": { "type": "string" },
+        "city": { "type": "string" },
+        "currency": { "type": "string" },
+        "openingDays": { "type": "array" },
+        "serviceHours": { "type": "object" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "ownerUid", "city", "currency"]
+    },
+    "MenuItem": {
+      "title": "MenuItem",
+      "description": "Menu item dish configuration and selling parameters",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string" },
+        "price": { "type": "number" },
+        "cost": { "type": "number" },
+        "prepLeadTimeHours": { "type": "number" },
+        "shelfLifeDays": { "type": "number" },
+        "isActive": { "type": "boolean" },
+        "embedding": { "type": "array" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "category", "price"]
+    },
+    "SaleRecord": {
+      "title": "SaleRecord",
+      "description": "Recorded daily dish sales count and stockout flag",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "menuItemId": { "type": "string" },
+        "dishName": { "type": "string" },
+        "quantitySold": { "type": "number" },
+        "soldOut": { "type": "boolean" },
+        "soldOutTime": { "type": "string" },
+        "batchId": { "type": "string" }
+      },
+      "required": ["date", "dishName", "quantitySold"]
+    },
+    "Plan": {
+      "title": "Plan",
+      "description": "Daily prep and purchase order plan with plain-language explanations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "date": { "type": "string" },
+        "prepItems": { "type": "array" },
+        "orderItems": { "type": "array" },
+        "explanations": { "type": "array" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["date", "prepItems", "orderItems"]
+    },
+    "FeedbackRecord": {
+      "title": "FeedbackRecord",
+      "description": "Confirmed stockout or leftover feedback record from post-service review",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["stockout", "leftover"] },
+        "dishName": { "type": "string" },
+        "occurredAtTime": { "type": "string" },
+        "estimatedPortions": { "type": "number" },
+        "date": { "type": "string" },
+        "serviceShift": { "type": "string", "enum": ["lunch", "dinner"] },
+        "notes": { "type": "string" },
+        "suggestedDelta": { "type": "number" },
+        "confirmed": { "type": "boolean" },
+        "confirmedAt": { "type": "string" }
+      },
+      "required": ["type", "dishName", "date", "confirmed"]
+    },
+    "AgentRunStep": {
+      "title": "AgentRunStep",
+      "description": "Observability trace step for triage, explainer, what-if, feedback, and ingest agents",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "runId": { "type": "string" },
+        "restaurantId": { "type": "string" },
+        "agent": { "type": "string" },
+        "step": { "type": "string" },
+        "input": { "type": "object" },
+        "output": { "type": "object" },
+        "latencyMs": { "type": "number" },
+        "tokenCounts": { "type": "object" },
+        "model": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "toolCalls": { "type": "array" }
+      },
+      "required": ["id", "runId", "agent", "step", "latencyMs", "model", "timestamp"]
+    },
+    "MoodEvent": {
+      "title": "MoodEvent",
+      "description": "Anonymous customer mood note, suggested menu dishes, and confirmed table order dishes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "restaurantId": { "type": "string" },
+        "moodText": { "type": "string" },
+        "moodSummary": { "type": "string" },
+        "moodTags": { "type": "array" },
+        "language": { "type": "string" },
+        "weatherContext": { "type": "string" },
+        "suggestedDishIds": { "type": "array" },
+        "suggestedDishes": { "type": "array" },
+        "orderedDishIds": { "type": "array" },
+        "orderedDishes": { "type": "array" },
+        "createdAt": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "restaurantId", "moodText", "suggestedDishIds", "orderedDishIds", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/restaurants/{restaurantId}": {
+      "schema": { "$ref": "#/entities/Restaurant" },
+      "description": "Root document for a restaurant owned by a specific Firebase user."
+    },
+    "/restaurants/{restaurantId}/menu_items/{itemId}": {
+      "schema": { "$ref": "#/entities/MenuItem" },
+      "description": "Dishes and beverage offerings of the restaurant."
+    },
+    "/restaurants/{restaurantId}/sales/{saleId}": {
+      "schema": { "$ref": "#/entities/SaleRecord" },
+      "description": "Historical sales entries per dish."
+    },
+    "/restaurants/{restaurantId}/plans/{planId}": {
+      "schema": { "$ref": "#/entities/Plan" },
+      "description": "Daily deterministic prep and purchase orders."
+    },
+    "/restaurants/{restaurantId}/feedback/{feedbackId}": {
+      "schema": { "$ref": "#/entities/FeedbackRecord" },
+      "description": "Confirmed post-service stockout and leftover records."
+    },
+    "/restaurants/{restaurantId}/agent_runs/{stepId}": {
+      "schema": { "$ref": "#/entities/AgentRunStep" },
+      "description": "Observability trace steps for Ask CraveCast agent executions."
+    },
+    "/restaurants/{restaurantId}/mood_events/{eventId}": {
+      "schema": { "$ref": "#/entities/MoodEvent" },
+      "description": "Anonymous customer mood recommendations and confirmed table order selections."
+    }
+  }
+}

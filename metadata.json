@@ -1,0 +1,8 @@
+{
+  "name": "Remix CraveCast",
+  "description": "Daily restaurant prep and inventory demand forecasting with deterministic planning and customer mood suggestions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
